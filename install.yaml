@@ -49,14 +49,14 @@ spec:
         securityContext:
         containers:
           - name: aws
-            image: aws-registry:latest
+            image: ghcr.io/danielhaba/awsregistry:latest
             args: ["awsregistry", "--in-cluster"]
             securityContext:
               runAsUser: 0
               runAsGroup: 0
             envFrom:
               secretRef:
-                name: awsregistry-config
+                name: aws-registry-config
             volumeMounts:
               - name: aws
                 mountPath: /root/.aws
