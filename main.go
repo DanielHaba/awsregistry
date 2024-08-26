@@ -242,12 +242,20 @@ func syncSecret(ctx context.Context, namespace string) error {
 	if create {
 		log.InfoContext(ctx, "creating secret")
 		if _, err := secrets.Create(ctx, secret, metav1.CreateOptions{}); err != nil {
+			if k8serrors.IsForbidden(err) {
+				log.WarnContext(ctx, "cannot create secret: forbidden")
+				return nil
+			}
 			log.ErrorContext(ctx, "failed to create secret", "err", err)
 			return err
 		}
 	} else {
 		log.InfoContext(ctx, "updating secret")
 		if _, err := secrets.Update(ctx, secret, metav1.UpdateOptions{}); err != nil {
+			if k8serrors.IsForbidden(err) {
+				log.WarnContext(ctx, "cannot create secret: forbidden")
+				return nil
+			}
 			log.ErrorContext(ctx, "failed to update secret", "err", err)
 			return err
 		}
